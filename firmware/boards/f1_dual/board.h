@@ -29,21 +29,21 @@
 /*
  * Board oscillators-related settings.
  * NOTE: LSE not fitted.
- * NOTE: HSE not fitted.
+ * NOTE: HSE is 8MHz.
  */
 #if !defined(STM32_LSECLK)
 #define STM32_LSECLK                0U
 #endif
 
 #if !defined(STM32_HSECLK)
-#define STM32_HSECLK                0U
+#define STM32_HSECLK                8000000U
 #endif
 
 /*
  * MCU type, supported types are defined in ./os/hal/platforms/hal_lld.h.
- */
-#define STM32F103xB
-
+ * see ChibiOS/os/common/ext/ST/STM32F1xx/stm32f1xx.h:
+ * STM32F103xE is for STM32F103RC */
+#define STM32F103RC
 /*
  * IO pins assignments.
  */
@@ -74,67 +74,81 @@
 
 /*
  * Port A setup.
- * PA0  - R_Ip_sense                (analog in)
- * PA1  - R_Ip_dac (PWM)            (output pushpull, alternate, 2 MHz)
- * PA2  - L_Ip_dac (PWM)            (output pushpull, alternate, 2 MHz)
- * PA3  - R_Un_3x_sense             (analog in)
- * PA4  - L_Ip_sense                (analog in)
- * PA5  - L_Un_3x_sense             (analog in)
- * PA6  - R_AUX_ADC                 (analog in)
- * PA7  - L_AUX_ADC                 (analog in)
- * PA8  - LED_GREEN                 (output pushpull, 2 MHz)
- * PA9  - UART_TX                   (output pushpull, alternate, 50 MHz)
- * PA10 - UART_RX                   (digital input, alternate)
- * PA11 - CAN_RX                    (digital input, alternate)
- * PA12 - CAN_TX                    (output pushpull, alternate, 50 MHz)
- * PA13 - SWDIO                     (digital input)
- * PA14 - SWCLK                     (digital input)
- * PA15 - SPI_CS2                   (output pushpull, 2 MHz)
+ * PA0  - Ip_sense                (analog in)
+ * PA1  - Ip_dac2                 (output pushpull, alternate, 2 MHz).
+ * PA2  - Un_sense                (analog in)
+ * PA3  - Un_sense2               (analog in)
+ * PA4  - DAC A                   (analog in ?).
+ * PA5  - DAC B                   (analog in ?).
+ * PA6  - VM                      (analog in)
+ * PA7  - Vm_sense                (analog in).
+ * PA8  - LED_BLUE                (output pushpull, 2 MHz)
+ * PA9  - LED_GREEN               (output pushpull, 2 MHz)
+ * PA10 - LED_BLUE1               (output pushpull, 2 MHz)
+ * PA11 - USB-                    Alternatywne Push Pull output 50MHz: B
+ * PA12 - USB+                    Alternatywne Open Drain output 50MHz: F
+ * PA13 - SWDIO                   (digital input)
+ * PA14 - SWCLK                   (digital input)
+ * PA15 -                         (output pushpull, 2 MHz)
  */
-#define VAL_GPIOACRL            0x00000BB0      /*  PA7...PA0 */
-#define VAL_GPIOACRH            0x288B8892      /* PA15...PA8 */
+#define VAL_GPIOACRL            0x00000000      /*  PA7...PA0 */
+#define VAL_GPIOACRH            0x288FB222      /* PA15...PA8 */
 #define VAL_GPIOAODR            0x0000FFFF
 
 /*
  * Port B setup.
- * PB0  - L_Heater_sense            (analog in).
- * PB1  - R_Heater_sense            (analog in).
+ * PB0  - R_Heater_sense            (analog in).
+ * PB1  - R_OUT_sense               (analog in).
  * PB2  - Nernsr_4.9_bias           (digital output, 2 Mhz)
  * PB3  - SPI1_SCK                  (output puspull, alternate, 50 MHz)
  * PB4  - SPI1_MISO                 (digital input, alternate)
  * PB5  - SPI1_MOSI                 (output puspull, alternate, 50 MHz)
  * PB6  - R_heater_pwm              (output pushpull, alternate, 2 MHz)
  * PB7  - L_heater_pwm              (output pushpull, alternate, 2 MHz)
- * PB8  - I2C1_SCL                  (output pushpull, alternate, 50 MHz)
- * PB9  - I2C1_SDA                  (output OD, alternate, 50 MHz)
+ * PB8  - CAN_RX                    (digital input, alternate). 4?
+ * PB9  - CAN_TX                    (output pushpull, alternate, 50 Mhz).
  * PB10 - Nernsr_ADV_esr_drive      (digital input, no pull) - keep high-Z after power on
  * PB11 - Nernsr_4.9_esr_drive      (output pushpull, 50 Mhz)
  * PB12 - Nernsr_4.2_esr_drive      (digital input, no pull) - keep high-Z after power on
- * PB13 - Blue LED                  (output pushpull, 2 MHz)
- * PB14 - PWMout2                   (output pushpull, alternate, 2 Mhz).
- * PB15 - PWMout1                   (output pushpull, alternate, 2 Mhz).
+ * PB13 - L_LED_GREEN               (output pushpull, 2 MHz)
+ * PB14 - L_OUT_en                  (output pushpull, 2 MHz)
+ * PB15 - heater_pwm                (output pushpull, 2 MHz).
  */
 #define VAL_GPIOBCRL            0xAAB8B200      /*  PB7...PB0 */
-#define VAL_GPIOBCRH            0xAA24348B      /* PB15...PB8 */
-#define VAL_GPIOBODR            0x0000FFFF
+#define VAL_GPIOBCRH            0x22243434      /* PB15...PB8 */
+#define VAL_GPIOBODR            0x00003FFF
 
 /*
- * Port C setup. (only PC13..PC15 exist on 48-pin package)
+ * Port C setup.
+ * PC0  - 12V_sense                 (analog in)
+ * PC1  - R_LED_GREEN               (output pushpull, 2 MHz)
+ * PC2  - L_Un_3x_sense             (analog in)
+ * PC3  - L_Ip_sense                (analog in)
+ * PC4  - L_OUT_sense               (analog in).
+ * PC5  - L_Heater_sense            (analog in).
+ * PC6  - DACout1                   (output pushpull, alternate, 50 MHz)
+ * PC7  - DACout1 (inverted)        (output pushpull, alternate, 50 MHz)
+ * PC8  - DACout2                   (output pushpull, alternate, 50 MHz)
+ * PC9  - DACout2 (inverted)        (output pushpull, alternate, 50 MHz)
+ * PC10 - BT_UART_TX                (output pushpull, alternate, 10 MHz)
+ * PA11 - BT_UART_RX                (digital input, alternate)
+ * PC12 - config0                   (digital input, no pull)
  * PC13 - config0                   (digital input, no pull)
  * PC14 - SPI_CS1                   (output pushpull, 2 MHz)
  * PC15 - SPI_CS0                   (output pushpull, 2 MHz)
  */
-#define VAL_GPIOCCRL            0x88888888      /*  PC7...PC0 */
-#define VAL_GPIOCCRH            0x22488888      /* PC15...PC8 */
+#define VAL_GPIOCCRL            0xB2000020      /*  PC7...PC0 */
+#define VAL_GPIOCCRH            0x224489BB      /* PC15...PC8 */
 #define VAL_GPIOCODR            0x0000FFFF
 
 /*
  * Port D setup.
  * Everything input with pull-up except:
- * PD0  - R_OUT_en                 (digital output, 2 Mhz) - keep low after power on
- * PD1  - L_OUT_en                 (digital output, 2 Mhz) - keep low after power on
+ * PD0  - OSC_IN                   (digital output, 2 Mhz) - keep low after power on
+ * PD1  - OSC_OUT                  (digital output, 2 Mhz) - keep low after power on
+ * PD2  - SP1_CS2                  (output pushpull, 2 MHz)
  */
-#define VAL_GPIODCRL            0x88888822      /*  PD7...PD0 */
+#define VAL_GPIODCRL            0x88888200      /*  PD7...PD0 */
 #define VAL_GPIODCRH            0x88888888      /* PD15...PD8 */
 #define VAL_GPIODODR            0x0000FFFC
 
@@ -145,6 +159,22 @@
 #define VAL_GPIOECRL            0x88888888      /*  PE7...PE0 */
 #define VAL_GPIOECRH            0x88888888      /* PE15...PE8 */
 #define VAL_GPIOEODR            0x0000FFFF
+
+/*
+ * Port F setup.
+ * Everything input with pull-up except:
+ */
+#define VAL_GPIOFCRL            0x88888888      /*  PF7...PF0 */
+#define VAL_GPIOFCRH            0x88888888      /* PF15...PF8 */
+#define VAL_GPIOFODR            0x0000FFFF
+
+/*
+ * Port G setup.
+ * Everything input with pull-up except:
+ */
+#define VAL_GPIOGCRL            0x88888888      /*  PG7...PG0 */
+#define VAL_GPIOGCRH            0x88888888      /* PG15...PG8 */
+#define VAL_GPIOGODR            0x0000FFFF
 
 /*
  * USB bus activation macro, required by the USB driver.
