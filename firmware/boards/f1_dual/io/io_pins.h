@@ -64,7 +64,7 @@
 #define PUMP_DAC_PWM_CHANNEL_0 1
 
 // PB1 TIM3_CH4
-#define PUMP_DAC_PWM_DEVICE PWMD3
+#define PUMP_DAC_PWM_DEVICE PWMD2
 #define PUMP_DAC_PWM_CHANNEL_1 3
 
 #define ID_SEL1_PORT				GPIOB  // not in use
