@@ -40,6 +40,10 @@ jobs:
         run: |
           sudo apt-get install srecord libarchive-zip-perl
 
+      # Ensure the script is executable
+      - name: Set execute permission for build script
+        run: chmod +x ./firmware/boards/${{matrix.build-target}}/build_wideband.sh
+
       - name: Build Firmware
         working-directory: ./firmware/boards/${{matrix.build-target}}
         run: ./build_wideband.sh
