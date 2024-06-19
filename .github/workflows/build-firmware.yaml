@@ -16,6 +16,7 @@ jobs:
           - build-target: f1_rev3
           - build-target: f1_dual
           - build-target: f1_dual_rev1
+          - build-target: widelambda_rev1
 
     steps:
       - uses: actions/checkout@v1
@@ -38,6 +39,10 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get install srecord libarchive-zip-perl
+
+      # Ensure the script is executable
+      - name: Set execute permission for build script
+        run: chmod +x ./firmware/boards/${{matrix.build-target}}/build_wideband.sh
 
       - name: Build Firmware
         working-directory: ./firmware/boards/${{matrix.build-target}}
